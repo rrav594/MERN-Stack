@@ -2,10 +2,22 @@ import LinkButton from "../../ui/LinkButton";
 import Button from "../../ui/Button";
 import CartItem from "./CartItem";
 import { useSelector } from "react-redux";
+import { clearCart, getCart } from "./cartSlice";
+import { useDispatch } from "react-redux";
+import EmptyCart from "./EmptyCart";
 
 function Cart() {
   const username = useSelector((state) => state.user.username);
-  const cart = [];
+  const cart = useSelector(getCart);
+
+  const dispatch = useDispatch();
+  function handleClearCart(e) {
+    e.preventDefault();
+    dispatch(clearCart());
+  }
+
+  if (!cart.length) return <EmptyCart />;
+
   return (
     <div className="px-4 py-3">
       <LinkButton to="/menu">&larr; Go back to Menu</LinkButton>
@@ -23,7 +35,9 @@ function Cart() {
           Order Pizzas
         </Button>
 
-        <Button type="secondary">Clear cart</Button>
+        <Button onClick={handleClearCart} type="secondary">
+          Clear cart
+        </Button>
       </div>
     </div>
   );
